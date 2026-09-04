@@ -1,37 +1,70 @@
 package com.payment.ingestor.controller;
 
-import com.payment.ingestor.dto.AccountResponse;
-import com.payment.ingestor.repository.AccountRepository;
+import com.payment.ingestor.dto.account.AccountResponse;
+import com.payment.ingestor.dto.account.CreateAccountRequest;
+import com.payment.ingestor.security.AppUserDetails;
+import com.payment.ingestor.service.AccountService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
-    public AccountController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    @PostMapping
+    public ResponseEntity<AccountResponse> createAccount(
+
+            @AuthenticationPrincipal
+            AppUserDetails userDetails,
+
+            @Valid
+            @RequestBody
+            CreateAccountRequest request) {
+
+        AccountResponse response = accountService.createAccount(request, userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<AccountResponse>> getMyAccounts(
+
+            @AuthenticationPrincipal
+            AppUserDetails userDetails) {
+
+        List<AccountResponse> accounts = accountService.getMyAccounts(userDetails);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/my/active")
+    public ResponseEntity<List<AccountResponse>> getMyActiveAccounts(
+
+            @AuthenticationPrincipal
+            AppUserDetails userDetails) {
+
+        List<AccountResponse> accounts = accountService.getMyActiveAccounts(userDetails);
+        return ResponseEntity.ok(accounts);
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<AccountResponse> get(@PathVariable String accountId) {
-        return accountRepository.findById(accountId)
-                .map(a -> ResponseEntity.ok(
-                        new AccountResponse(
-                                a.getAccountId(),
-                                a.getAccountName(),
-                                a.getAccountType(),
-                                a.getAccountBalance(),
-                                a.getStatus(),
-                                a.getCurrency(),
-                                a.getOpenedDate()
-                        )
-                    )
-                ).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<AccountResponse> getAccount(
+
+            @PathVariable
+            String accountId,
+
+            @AuthenticationPrincipal
+            AppUserDetails userDetails) {
+
+        AccountResponse response = accountService.getAccount(accountId, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }
