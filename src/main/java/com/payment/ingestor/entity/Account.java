@@ -3,17 +3,33 @@ package com.payment.ingestor.entity;
 import com.payment.ingestor.model.AccountStatus;
 import com.payment.ingestor.model.AccountType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static com.payment.ingestor.constant.PaymentIngestorConstants.ACCOUNTS_TABLE_NAME;
 
+@Getter
 @Entity
-@Table(name = ACCOUNTS_TABLE_NAME)
+@Table(
+        name = ACCOUNTS_TABLE_NAME,
+        indexes = {
+                @Index(
+                        name = "idx_accounts_account_id_user_id",
+                        columnList = "account_id,user_id"
+                )
+        }
+)
 public class Account {
+
     @Id
-    @Column(name = "account_id", length = 64)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "account_id", updatable = false, nullable = false, unique = true, length = 64)
     private String accountId;
 
     @Column(nullable = false)
@@ -36,32 +52,33 @@ public class Account {
     @Column(nullable = false)
     private LocalDate openedDate;
 
-    public String getAccountId() {
-        return accountId;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_accounts_user"))
+    private User user;
+
+    public Account() {
     }
 
-    public String getAccountName() {
-        return accountName;
+    public Account(
+            String accountId,
+            String accountName,
+            AccountType accountType,
+            BigDecimal accountBalance,
+            AccountStatus status,
+            String currency,
+            LocalDate openedDate,
+            User user) {
+
+        this.accountId = accountId;
+        this.accountName = accountName;
+        this.accountType = accountType;
+        this.accountBalance = accountBalance;
+        this.status = status;
+        this.currency = currency;
+        this.openedDate = openedDate;
+        this.user = user;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
-    }
-
-    public BigDecimal getAccountBalance() {
-        return accountBalance;
-    }
-
-    public AccountStatus getStatus() {
-        return status;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public LocalDate getOpenedDate() {
-        return openedDate;
-    }
 }
 
