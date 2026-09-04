@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PaymentOutboxRepository extends JpaRepository<PaymentOutbox, UUID> {
+
     List<PaymentOutbox> findTop100ByStatusOrderByCreatedAtAsc(String status);
+
 }
