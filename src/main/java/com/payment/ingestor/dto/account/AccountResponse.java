@@ -1,4 +1,4 @@
-package com.payment.ingestor.dto;
+package com.payment.ingestor.dto.account;
 
 import com.payment.ingestor.model.AccountStatus;
 import com.payment.ingestor.model.AccountType;
