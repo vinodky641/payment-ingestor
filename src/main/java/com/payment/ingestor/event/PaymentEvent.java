@@ -11,7 +11,7 @@ public record PaymentEvent(
         String creditAccountId,
         BigDecimal amount,
         String currency,
-        Instant submittedAt,
+        Instant createdAt,
         UUID initiatedByUserId
 ) {
 }

@@ -70,6 +70,9 @@ public class Payment {
     @JoinColumn(name = "initiated_by", nullable = false, foreignKey = @ForeignKey(name = "fk_payments_user"))
     private User user;
 
+    @Column(nullable = false, length = 20)
+    private String status = "ACCEPTED";
+
     public Payment() {
     }
 
@@ -81,8 +84,8 @@ public class Payment {
             BigDecimal amount,
             String currency,
             Instant receivedAt,
-            User user) {
-
+            User user
+    ) {
         this.paymentId = paymentId;
         this.idempotencyKey = idempotencyKey;
         this.debitAccountId = debitAccountId;
@@ -92,5 +95,5 @@ public class Payment {
         this.receivedAt = receivedAt;
         this.user = user;
     }
-    
+
 }

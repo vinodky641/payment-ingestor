@@ -27,7 +27,7 @@ import static com.payment.ingestor.constant.PaymentIngestorConstants.*;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentIngestionService {
+public class PaymentOutboxService {
 
     private final PaymentRepository paymentRepository;
     private final PaymentIdGenerator paymentIdGenerator;

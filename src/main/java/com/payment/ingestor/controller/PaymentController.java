@@ -3,7 +3,7 @@ package com.payment.ingestor.controller;
 import com.payment.ingestor.dto.payment.AcceptedResponse;
 import com.payment.ingestor.dto.payment.PaymentRequest;
 import com.payment.ingestor.security.AppUserDetails;
-import com.payment.ingestor.service.PaymentIngestionService;
+import com.payment.ingestor.service.PaymentOutboxService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final PaymentIngestionService paymentIngestionService;
+    private final PaymentOutboxService paymentOutboxService;
 
     @PostMapping
     public ResponseEntity<AcceptedResponse> createPayment(
@@ -30,7 +30,7 @@ public class PaymentController {
             @Valid @RequestBody
             PaymentRequest paymentRequest) {
 
-        AcceptedResponse response = paymentIngestionService.createPayment(
+        AcceptedResponse response = paymentOutboxService.createPayment(
                 idempotencyKey,
                 userDetails,
                 paymentRequest
