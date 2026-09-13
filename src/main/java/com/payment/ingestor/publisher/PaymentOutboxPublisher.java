@@ -34,7 +34,7 @@ public class OutboxPublisher {
             for (PaymentOutbox row : rows) {
                 try {
                     PaymentEvent paymentEvent = mapper.readValue(row.getPayload(), PaymentEvent.class);
-                    kafkaTemplate.send(KAFKA_TOPIC_NAME, paymentEvent.paymentId(), paymentEvent).get();
+                    kafkaTemplate.send(KAFKA_TOPIC_NAME_FOR_PAYMENTS_SUBMITTED, paymentEvent.paymentId(), paymentEvent).get();
                     row.markPublished();
                     paymentOutboxRepository.save(row);
                 } catch (Exception ignored) {

@@ -30,6 +30,7 @@ public record SignupRequest(
         @Size(max = 20, message = "Phone number must not exceed 20 characters")
         String phoneNumber,
 
+        @NotBlank(message = "Display name is required")
         @Size(max = 150, message = "Display name must not exceed 150 characters")
         String displayName
 ) {

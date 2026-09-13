@@ -166,7 +166,7 @@ public class PaymentIngestionService {
                     new PaymentOutbox(
                             eventId,
                             paymentId,
-                            PAYMENT_EVENT_TYPE,
+                            EVENT_TYPE_PAYMENT,
                             mapper.writeValueAsString(paymentEvent)
                     )
             );

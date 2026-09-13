@@ -11,6 +11,7 @@ import com.payment.ingestor.exception.UserAccountDisabledException;
 import com.payment.ingestor.exception.UserAccountLockedException;
 import com.payment.ingestor.model.UserStatus;
 import com.payment.ingestor.repository.UserRepository;
+import com.payment.ingestor.service.UserCreatedOutboxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import static com.payment.ingestor.constant.PaymentIngestorConstants.*;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final UserCreatedOutboxService userCreatedOutboxService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -52,13 +54,8 @@ public class AuthService {
                 .build();
 
         User savedUser = userRepository.save(user);
-
-        return new SignupResponse(
-                savedUser.getId(),
-                savedUser.getEmail(),
-                savedUser.getFirstName(),
-                savedUser.getLastName()
-        );
+        userCreatedOutboxService.createOutboxEvent(savedUser);
+        return SignupResponse.from(savedUser);
     }
 
     @Transactional

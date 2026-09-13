@@ -55,7 +55,7 @@ public class User {
     @Column(name = "phone_number", length = 30)
     private String phoneNumber;
 
-    @Column(name = "display_name", length = 150)
+    @Column(name = "display_name", nullable = false, length = 150)
     private String displayName;
 
     @Enumerated(EnumType.STRING)
@@ -90,6 +90,14 @@ public class User {
     @Builder.Default
     private List<Account> accounts = new ArrayList<>();
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
+    @Column(name = "source_version", nullable = false)
+    @Builder.Default
+    private Long sourceVersion = 0L;
+
     @PrePersist
     protected void onCreate() {
         Instant now = Instant.now();
@@ -113,6 +121,21 @@ public class User {
     public void removeAccount(Account account) {
         accounts.remove(account);
         account.setUser(null);
+    }
+
+    public void updateProfile(
+            String firstName,
+            String lastName,
+            String phoneNumber,
+            String displayName
+    ) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.displayName = displayName;
+
+        this.sourceVersion++;
     }
     
 }
