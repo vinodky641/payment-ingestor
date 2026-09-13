@@ -67,6 +67,28 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    //App user's AppIllegalArgumentException exception handler
+    @ExceptionHandler(AppIllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleAppIllegalArgumentException(
+            AppIllegalArgumentException ex,
+            HttpServletRequest request) {
+
+        List<Violation> violations = List.of(new Violation(
+                ex.getField(),
+                ex.getMessage()
+        ));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiErrorResponse(
+                        Instant.now(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        VALIDATION_FAILED_ERROR,
+                        request.getRequestURI(),
+                        violations
+                ));
+    }
+
     // App user's duplicate finance account exception handler
     @ExceptionHandler(DuplicateAccountException.class)
     public ResponseEntity<ApiErrorResponse> handleDuplicateAccountException(

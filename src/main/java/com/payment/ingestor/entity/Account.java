@@ -20,6 +20,10 @@ import static com.payment.ingestor.constant.PaymentIngestorConstants.ACCOUNTS_TA
                 @Index(
                         name = "idx_accounts_account_id_user_id",
                         columnList = "account_id,user_id"
+                ),
+                @Index(
+                        name = "idx_accounts_user_id_status",
+                        columnList = "user_id,status"
                 )
         }
 )
@@ -57,6 +61,13 @@ public class Account {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_accounts_user"))
     private User user;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
+    @Column(name = "source_version", nullable = false)
+    private Long sourceVersion;
+
     public Account() {
     }
 
@@ -78,6 +89,11 @@ public class Account {
         this.currency = currency;
         this.openedDate = openedDate;
         this.user = user;
+        this.sourceVersion = 1L;
+    }
+
+    public void incrementSourceVersion() {
+        this.sourceVersion++;
     }
 
 }
