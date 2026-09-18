@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import static com.payment.ingestor.constant.PaymentIngestorConstants.ROLE_USER;
+import static com.payment.ingestor.constant.PaymentIngestorConstants.ROLE_PREFIX;
 
 @RequiredArgsConstructor
 public class AppUserDetails implements UserDetails {
@@ -33,7 +33,7 @@ public class AppUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(
-                new SimpleGrantedAuthority(ROLE_USER)
+                new SimpleGrantedAuthority(ROLE_PREFIX + user.getRole().name())
         );
     }
 

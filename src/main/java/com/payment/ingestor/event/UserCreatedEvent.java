@@ -1,5 +1,6 @@
 package com.payment.ingestor.event;
 
+import com.payment.ingestor.model.Role;
 import com.payment.ingestor.model.UserStatus;
 
 import java.time.Instant;
@@ -17,6 +18,7 @@ public record UserCreatedEvent(
         boolean emailVerified,
         Instant createdAt,
         Instant updatedAt,
+        Role role,
         Long sourceVersion
 ) {
 }

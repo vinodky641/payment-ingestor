@@ -2,6 +2,7 @@ package com.payment.ingestor.publisher;
 
 
 import com.payment.ingestor.config.PaymentOutboxProperties;
+import com.payment.ingestor.config.PaymentSubmittedTopicProperties;
 import com.payment.ingestor.entity.PaymentOutbox;
 import com.payment.ingestor.event.PaymentEvent;
 import com.payment.ingestor.service.PaymentOutboxClaimService;
@@ -34,6 +35,7 @@ public class PaymentOutboxPublisher {
     private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
     private final ObjectMapper mapper;
     private final PaymentOutboxProperties properties;
+    private final PaymentSubmittedTopicProperties paymentSubmittedTopicProperties;
     private final MeterRegistry meterRegistry;
     private final AtomicInteger inFlight = new AtomicInteger(0);
 
@@ -111,7 +113,7 @@ public class PaymentOutboxPublisher {
         inFlight.incrementAndGet();
         try {
             kafkaTemplate.send(
-                    KAFKA_TOPIC_NAME_FOR_PAYMENTS_SUBMITTED,
+                    paymentSubmittedTopicProperties.getName(),
                     paymentEvent.paymentId(),
                     paymentEvent
             ).whenComplete(
@@ -142,7 +144,7 @@ public class PaymentOutboxPublisher {
                         "PaymentEvent published successfully. eventId={}, paymentId={}, topic={}, partition={}, offset={}",
                         paymentOutbox.getEventId(),
                         paymentOutbox.getPaymentId(),
-                        KAFKA_TOPIC_NAME_FOR_PAYMENTS_SUBMITTED,
+                        paymentSubmittedTopicProperties.getName(),
                         result.getRecordMetadata().partition(),
                         result.getRecordMetadata().offset()
                 );

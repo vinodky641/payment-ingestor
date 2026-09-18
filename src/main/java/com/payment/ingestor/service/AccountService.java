@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +34,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountIdGenerator accountIdGenerator;
     private final UserRepository userRepository;
+    private final AccountCreatedOutboxService accountCreatedOutboxService;
 
     @Transactional
     public AccountResponse createAccount(CreateAccountRequest request, AppUserDetails userDetails) {
@@ -65,13 +65,13 @@ public class AccountService {
                 USER_FINANCIAL_ACCOUNT_INITIAL_BALANCE,
                 AccountStatus.ACTIVE,
                 request.currency().trim().toUpperCase(),
-                LocalDate.now(),
                 user
         );
 
         // Persist the account
         Account savedAccount = accountRepository.save(account);
-        return mapToResponse(savedAccount);
+        accountCreatedOutboxService.createOutboxEvent(savedAccount);
+        return AccountResponse.from(savedAccount);
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class AccountService {
         // Find all accounts belonging to this user
         return accountRepository.findAllByUserId(userId)
                 .stream()
-                .map(this::mapToResponse)
+                .map(AccountResponse::from)
                 .toList();
     }
 
@@ -114,7 +114,7 @@ public class AccountService {
 
         if (!accounts.isEmpty()) {
             accountsResponse = accounts.stream()
-                    .map(this::mapToResponse)
+                    .map(AccountResponse::from)
                     .toList();
         }
         return accountsResponse;
@@ -132,7 +132,7 @@ public class AccountService {
                 ACCOUNT_NOT_FOUND + accountId
         ));
 
-        return mapToResponse(account);
+        return AccountResponse.from(account);
     }
 
     @Transactional(readOnly = true)
@@ -172,20 +172,6 @@ public class AccountService {
                 result.getTotalPages(),
                 result.isFirst(),
                 result.isLast()
-        );
-    }
-
-
-    private AccountResponse mapToResponse(Account account) {
-
-        return new AccountResponse(
-                account.getAccountId(),
-                account.getAccountName(),
-                account.getAccountType(),
-                account.getAccountBalance(),
-                account.getStatus(),
-                account.getCurrency(),
-                account.getOpenedDate()
         );
     }
 

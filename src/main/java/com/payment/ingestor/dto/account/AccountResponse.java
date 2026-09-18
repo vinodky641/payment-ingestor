@@ -1,5 +1,6 @@
 package com.payment.ingestor.dto.account;
 
+import com.payment.ingestor.entity.Account;
 import com.payment.ingestor.model.AccountStatus;
 import com.payment.ingestor.model.AccountType;
 
@@ -15,4 +16,18 @@ public record AccountResponse(
         String currency,
         LocalDate openedDate
 ) {
+
+    public static AccountResponse from(Account account) {
+
+        return new AccountResponse(
+                account.getAccountId(),
+                account.getAccountName(),
+                account.getAccountType(),
+                account.getAccountBalance(),
+                account.getStatus(),
+                account.getCurrency(),
+                account.getOpenedDate()
+        );
+    }
+
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -56,6 +57,9 @@ public class Account {
     @Column(nullable = false)
     private LocalDate openedDate;
 
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_accounts_user"))
@@ -78,7 +82,6 @@ public class Account {
             BigDecimal accountBalance,
             AccountStatus status,
             String currency,
-            LocalDate openedDate,
             User user) {
 
         this.accountId = accountId;
@@ -87,12 +90,29 @@ public class Account {
         this.accountBalance = accountBalance;
         this.status = status;
         this.currency = currency;
-        this.openedDate = openedDate;
+        this.openedDate = LocalDate.now();
+        this.updatedAt = Instant.now();
         this.user = user;
         this.sourceVersion = 1L;
     }
 
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
+
     public void incrementSourceVersion() {
+        this.sourceVersion++;
+    }
+
+    public void updateAccount(
+            String accountName,
+            AccountType accountType,
+            AccountStatus status
+    ) {
+        this.accountName = accountName;
+        this.accountType = accountType;
+        this.status = status;
         this.sourceVersion++;
     }
 

@@ -1,5 +1,6 @@
 package com.payment.ingestor.entity;
 
+import com.payment.ingestor.model.Role;
 import com.payment.ingestor.model.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -90,6 +91,11 @@ public class User {
     @Builder.Default
     private List<Account> accounts = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    @Builder.Default
+    private Role role = Role.USER;
+
     @Version
     @Column(name = "version", nullable = false)
     private Long version;
@@ -137,5 +143,5 @@ public class User {
 
         this.sourceVersion++;
     }
-    
+
 }

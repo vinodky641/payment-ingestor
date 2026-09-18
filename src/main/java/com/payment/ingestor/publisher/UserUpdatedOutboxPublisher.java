@@ -1,6 +1,7 @@
 package com.payment.ingestor.publisher;
 
 import com.payment.ingestor.config.UserUpdatedOutboxProperties;
+import com.payment.ingestor.config.UserUpdatedTopicProperties;
 import com.payment.ingestor.entity.UserUpdatedOutbox;
 import com.payment.ingestor.event.UserUpdatedEvent;
 import com.payment.ingestor.service.UserUpdatedOutboxClaimService;
@@ -33,6 +34,7 @@ public class UserUpdatedOutboxPublisher {
     private final KafkaTemplate<String, UserUpdatedEvent> kafkaTemplate;
     private final ObjectMapper mapper;
     private final UserUpdatedOutboxProperties properties;
+    private final UserUpdatedTopicProperties userUpdatedTopicProperties;
     private final MeterRegistry meterRegistry;
     private final AtomicInteger inFlight = new AtomicInteger(0);
 
@@ -109,7 +111,7 @@ public class UserUpdatedOutboxPublisher {
         inFlight.incrementAndGet();
         try {
             kafkaTemplate.send(
-                    KAFKA_TOPIC_NAME_FOR_USERS_UPDATED,
+                    userUpdatedTopicProperties.getName(),
                     userUpdatedEvent.userId().toString(),
                     userUpdatedEvent
             ).whenComplete(
@@ -140,7 +142,7 @@ public class UserUpdatedOutboxPublisher {
                         "UserUpdatedEvent published successfully. eventId={}, userId={}, topic={}, partition={}, offset={}",
                         userUpdatedOutbox.getEventId(),
                         userUpdatedOutbox.getUserId(),
-                        KAFKA_TOPIC_NAME_FOR_USERS_UPDATED,
+                        userUpdatedTopicProperties.getName(),
                         result.getRecordMetadata().partition(),
                         result.getRecordMetadata().offset()
                 );

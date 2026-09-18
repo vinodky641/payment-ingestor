@@ -38,6 +38,7 @@ public class UserCreatedOutboxService {
                     user.isEmailVerified(),
                     user.getCreatedAt(),
                     user.getUpdatedAt(),
+                    user.getRole(),
                     user.getSourceVersion()
             );
 

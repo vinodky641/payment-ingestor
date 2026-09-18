@@ -40,9 +40,9 @@ public class UserService {
                 request.displayName()
         );
 
-        userRepository.save(user);
-        userUpdatedOutboxService.createOutboxEvent(user);
-        return UserResponse.from(user);
+        User savedUser = userRepository.save(user);
+        userUpdatedOutboxService.createOutboxEvent(savedUser);
+        return UserResponse.from(savedUser);
     }
 
 }

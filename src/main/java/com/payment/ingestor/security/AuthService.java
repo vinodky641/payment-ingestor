@@ -9,6 +9,7 @@ import com.payment.ingestor.exception.EmailAlreadyExistsException;
 import com.payment.ingestor.exception.InvalidCredentialsException;
 import com.payment.ingestor.exception.UserAccountDisabledException;
 import com.payment.ingestor.exception.UserAccountLockedException;
+import com.payment.ingestor.model.Role;
 import com.payment.ingestor.model.UserStatus;
 import com.payment.ingestor.repository.UserRepository;
 import com.payment.ingestor.service.UserCreatedOutboxService;
@@ -51,6 +52,7 @@ public class AuthService {
                 .status(UserStatus.ACTIVE)
                 .failedLoginAttempts(0)
                 .emailVerified(false)
+                .role(Role.USER)
                 .build();
 
         User savedUser = userRepository.save(user);
