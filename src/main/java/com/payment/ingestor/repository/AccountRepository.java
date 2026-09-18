@@ -1,5 +1,6 @@
 package com.payment.ingestor.repository;
 
+import com.payment.ingestor.dto.account.AdminAccountResponse;
 import com.payment.ingestor.dto.account.RecipientAccountResponse;
 import com.payment.ingestor.entity.Account;
 import com.payment.ingestor.model.AccountStatus;
@@ -9,11 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     Optional<Account> findByAccountId(String accountId);
@@ -46,5 +49,23 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
             @Param("status") AccountStatus status,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT new com.payment.ingestor.dto.account.AdminAccountResponse(
+            a.accountId,
+            u.id,
+            u.displayName,
+            a.accountName,
+            a.accountType,
+            a.status,
+            a.accountBalance,
+            a.currency,
+            a.openedDate
+        )
+        FROM Account a
+        JOIN a.user u
+        ORDER BY a.accountId ASC
+        """)
+    Page<AdminAccountResponse> findAllForAdmin(Pageable pageable);
 
 }
