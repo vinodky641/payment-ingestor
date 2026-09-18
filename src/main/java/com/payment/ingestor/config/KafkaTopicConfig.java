@@ -1,80 +1,70 @@
 package com.payment.ingestor.config;
 
+import lombok.AllArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.RETENTION_MS;
+
 @Configuration
+@AllArgsConstructor
 public class KafkaTopicConfig {
 
+    private final UserCreatedTopicProperties userCreatedTopicProperties;
+    private final UserUpdatedTopicProperties userUpdatedTopicProperties;
+    private final AccountCreatedTopicProperties accountCreatedTopicProperties;
+    private final AccountUpdatedTopicProperties accountUpdatedTopicProperties;
+    private final PaymentSubmittedTopicProperties paymentSubmittedTopicProperties;
+
     @Bean
-    public NewTopic usersCreatedTopic(
-
-            @Value("${kafka.topics.users-created.name}")
-            String topicName,
-
-            @Value("${kafka.topics.users-created.partitions}")
-            int partitions,
-
-            @Value("${kafka.topics.users-created.replication-factor}")
-            short replicationFactor,
-
-            @Value("${kafka.topics.users-created.retention-ms}")
-            String retentionMs
-    ) {
+    public NewTopic usersCreatedTopic() {
         return TopicBuilder
-                .name(topicName)
-                .partitions(partitions)
-                .replicas(replicationFactor)
-                .config("retention.ms", retentionMs)
+                .name(userCreatedTopicProperties.getName())
+                .partitions(userCreatedTopicProperties.getPartitions())
+                .replicas(userCreatedTopicProperties.getReplicationFactor())
+                .config(RETENTION_MS, userCreatedTopicProperties.getRetentionMs())
                 .build();
     }
 
     @Bean
-    public NewTopic usersUpdatedTopic(
-
-            @Value("${kafka.topics.users-updated.name}")
-            String topicName,
-
-            @Value("${kafka.topics.users-updated.partitions}")
-            int partitions,
-
-            @Value("${kafka.topics.users-updated.replication-factor}")
-            short replicationFactor,
-
-            @Value("${kafka.topics.users-updated.retention-ms}")
-            String retentionMs
-    ) {
+    public NewTopic usersUpdatedTopic() {
         return TopicBuilder
-                .name(topicName)
-                .partitions(partitions)
-                .replicas(replicationFactor)
-                .config("retention.ms", retentionMs)
+                .name(userUpdatedTopicProperties.getName())
+                .partitions(userUpdatedTopicProperties.getPartitions())
+                .replicas(userUpdatedTopicProperties.getReplicationFactor())
+                .config(RETENTION_MS, userUpdatedTopicProperties.getRetentionMs())
                 .build();
     }
 
     @Bean
-    NewTopic paymentsSubmittedTopic(
-
-            @Value("${kafka.topics.payments-submitted.name}")
-            String topicName,
-
-            @Value("${kafka.topics.payments-submitted.partitions}")
-            int partitions,
-
-            @Value("${kafka.topics.payments-submitted.replication-factor}")
-            short replicationFactor,
-
-            @Value("${kafka.topics.payments-submitted.retention-ms}")
-            String retentionMs
-    ) {
+    public NewTopic accountsCreatedTopic() {
         return TopicBuilder
-                .name(topicName)
-                .partitions(partitions)
-                .replicas(replicationFactor)
-                .config("retention.ms", retentionMs)
+                .name(accountCreatedTopicProperties.getName())
+                .partitions(accountCreatedTopicProperties.getPartitions())
+                .replicas(accountCreatedTopicProperties.getReplicationFactor())
+                .config(RETENTION_MS, accountCreatedTopicProperties.getRetentionMs())
+                .build();
+    }
+
+    @Bean
+    public NewTopic accountsUpdatedTopic() {
+        return TopicBuilder
+                .name(accountUpdatedTopicProperties.getName())
+                .partitions(accountUpdatedTopicProperties.getPartitions())
+                .replicas(accountUpdatedTopicProperties.getReplicationFactor())
+                .config(RETENTION_MS, accountUpdatedTopicProperties.getRetentionMs())
+                .build();
+    }
+
+    @Bean
+    NewTopic paymentsSubmittedTopic() {
+        return TopicBuilder
+                .name(paymentSubmittedTopicProperties.getName())
+                .partitions(paymentSubmittedTopicProperties.getPartitions())
+                .replicas(paymentSubmittedTopicProperties.getReplicationFactor())
+                .config(RETENTION_MS, paymentSubmittedTopicProperties.getRetentionMs())
                 .build();
     }
 

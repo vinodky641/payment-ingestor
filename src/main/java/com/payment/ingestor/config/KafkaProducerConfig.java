@@ -1,8 +1,6 @@
 package com.payment.ingestor.config;
 
-import com.payment.ingestor.event.PaymentEvent;
-import com.payment.ingestor.event.UserCreatedEvent;
-import com.payment.ingestor.event.UserUpdatedEvent;
+import com.payment.ingestor.event.*;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -82,6 +80,42 @@ public class KafkaProducerConfig {
 
             @Qualifier("userUpdatedProducerFactory")
             ProducerFactory<String, UserUpdatedEvent> producerFactory
+    ) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+    // For Account Created events
+    @Bean
+    public ProducerFactory<String, AccountCreatedEvent> accountCreatedProducerFactory() {
+
+        return new DefaultKafkaProducerFactory<>(
+                producerProperties()
+        );
+    }
+
+    @Bean
+    public KafkaTemplate<String, AccountCreatedEvent> accountCreatedKafkaTemplate(
+
+            @Qualifier("accountCreatedProducerFactory")
+            ProducerFactory<String, AccountCreatedEvent> producerFactory
+    ) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+    // For Account Updated events
+    @Bean
+    public ProducerFactory<String, AccountUpdatedEvent> accountUpdatedProducerFactory() {
+
+        return new DefaultKafkaProducerFactory<>(
+                producerProperties()
+        );
+    }
+
+    @Bean
+    public KafkaTemplate<String, AccountUpdatedEvent> accountUpdatedKafkaTemplate(
+
+            @Qualifier("accountUpdatedProducerFactory")
+            ProducerFactory<String, AccountUpdatedEvent> producerFactory
     ) {
         return new KafkaTemplate<>(producerFactory);
     }

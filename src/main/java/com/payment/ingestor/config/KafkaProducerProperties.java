@@ -28,4 +28,5 @@ public class KafkaProducerProperties {
     private int deliveryTimeoutMs;
 
     private boolean addTypeInfoHeaders;
+    
 }
