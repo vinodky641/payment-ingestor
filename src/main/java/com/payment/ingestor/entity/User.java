@@ -102,7 +102,7 @@ public class User {
 
     @Column(name = "source_version", nullable = false)
     @Builder.Default
-    private Long sourceVersion = 0L;
+    private long sourceVersion = 0L;
 
     @PrePersist
     protected void onCreate() {

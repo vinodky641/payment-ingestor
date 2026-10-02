@@ -19,6 +19,6 @@ public record UserCreatedEvent(
         Instant createdAt,
         Instant updatedAt,
         Role role,
-        Long sourceVersion
+        long sourceVersion
 ) {
 }

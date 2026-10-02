@@ -33,8 +33,6 @@ public class AccountUpdatedOutboxService {
                     account.getAccountName(),
                     account.getAccountType(),
                     account.getStatus(),
-                    account.getCurrency(),
-                    account.getOpenedDate(),
                     account.getUpdatedAt(),
                     account.getSourceVersion()
             );

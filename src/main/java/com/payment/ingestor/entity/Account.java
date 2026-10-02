@@ -3,6 +3,7 @@ package com.payment.ingestor.entity;
 import com.payment.ingestor.model.AccountStatus;
 import com.payment.ingestor.model.AccountType;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,12 @@ import static com.payment.ingestor.constant.PaymentIngestorConstants.ACCOUNTS_TA
 @Entity
 @Table(
         name = ACCOUNTS_TABLE_NAME,
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_accounts_account_id",
+                        columnNames = "account_id"
+                )
+        },
         indexes = {
                 @Index(
                         name = "idx_accounts_account_id_user_id",
@@ -28,6 +35,7 @@ import static com.payment.ingestor.constant.PaymentIngestorConstants.ACCOUNTS_TA
                 )
         }
 )
+@Builder
 public class Account {
 
     @Id
@@ -70,7 +78,11 @@ public class Account {
     private Long version;
 
     @Column(name = "source_version", nullable = false)
-    private Long sourceVersion;
+    private long sourceVersion;
+
+    @Column(name = "balance_version", nullable = false)
+    @Builder.Default
+    private long balanceVersion = 0L;
 
     public Account() {
     }
@@ -93,7 +105,7 @@ public class Account {
         this.openedDate = LocalDate.now();
         this.updatedAt = Instant.now();
         this.user = user;
-        this.sourceVersion = 1L;
+        this.sourceVersion = 0L;
     }
 
     @PreUpdate
@@ -114,6 +126,32 @@ public class Account {
         this.accountType = accountType;
         this.status = status;
         this.sourceVersion++;
+    }
+
+    public void applyBalanceChange(
+            BigDecimal newBalance,
+            long newBalanceVersion
+    ) {
+        if (newBalance == null) {
+            throw new IllegalArgumentException(
+                    "newBalance must not be null"
+            );
+        }
+
+        if (newBalance.signum() < 0) {
+            throw new IllegalArgumentException(
+                    "newBalance cannot be negative"
+            );
+        }
+
+        if (newBalanceVersion <= this.balanceVersion) {
+            throw new IllegalArgumentException(
+                    "newBalanceVersion must be greater than current balanceVersion"
+            );
+        }
+
+        this.accountBalance = newBalance;
+        this.balanceVersion = newBalanceVersion;
     }
 
 }

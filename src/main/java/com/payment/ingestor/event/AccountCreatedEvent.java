@@ -17,7 +17,7 @@ public record AccountCreatedEvent(
         AccountStatus status,
         String currency,
         LocalDate openedDate,
-        Long sourceVersion
+        long sourceVersion
 ) {
 }
 
