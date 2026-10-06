@@ -11,6 +11,7 @@ public record AdminAccountResponse(
         String accountId,
         UUID userId,
         String userName,
+        String email,
         String accountName,
         AccountType accountType,
         AccountStatus status,

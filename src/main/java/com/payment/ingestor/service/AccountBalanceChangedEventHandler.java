@@ -62,7 +62,7 @@ public class AccountBalanceChangedEventHandler {
         // Currency is immutable in the Account
         if (!account.getCurrency().equalsIgnoreCase(event.currency())) {
             throw new AccountBalanceReplicaConflictException(
-                    CURRENCY_FIELD,
+                    ACCOUNT_CURRENCY_FIELD,
                     "Account currency mismatch. accountId = " + event.accountId() + ", accountCurrency = " + account.getCurrency() +
                             ", eventCurrency = " + event.currency()
             );
@@ -198,7 +198,7 @@ public class AccountBalanceChangedEventHandler {
 
         if (event.currency() == null || event.currency().isBlank() || event.currency().length() != 3) {
             throw new NonRetryableEventException(
-                    CURRENCY_FIELD,
+                    ACCOUNT_CURRENCY_FIELD,
                     CURRENCY_MUST_BE_A_3CHARACTER_ISO_CURRENCY_CODE
             );
         }

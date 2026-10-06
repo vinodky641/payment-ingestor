@@ -1,18 +1,15 @@
 package com.payment.ingestor.service;
 
-import com.payment.ingestor.dto.account.AccountResponse;
-import com.payment.ingestor.dto.account.AdminAccountResponse;
-import com.payment.ingestor.dto.account.PageResponse;
-import com.payment.ingestor.dto.account.UpdateAccountRequest;
+import com.payment.ingestor.dto.account.*;
 import com.payment.ingestor.entity.Account;
 import com.payment.ingestor.exception.AccountNotFoundException;
 import com.payment.ingestor.exception.AppIllegalArgumentException;
+import com.payment.ingestor.model.AccountStatus;
+import com.payment.ingestor.model.AccountType;
 import com.payment.ingestor.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,29 +25,29 @@ public class AdminAccountService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
-    public PageResponse<AdminAccountResponse> getAccountsForAdminView(int page, int size) {
-
-        if (page < 0) {
+    public PageResponse<AdminAccountResponse> getAccountsForAdminView(
+            String search,
+            AccountStatus status,
+            AccountType accountType,
+            Pageable pageable
+    ) {
+        if (pageable.getPageNumber() < 0) {
             throw new AppIllegalArgumentException(
                     PAGE_FIELD,
                     PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO
             );
         }
 
-        if (size < 1 || size > MAX_PAGE_SIZE) {
+        if (pageable.getPageSize() < 1 || pageable.getPageSize() > MAX_PAGE_SIZE) {
             throw new AppIllegalArgumentException(
                     PAGE_SIZE_FIELD,
                     PAGE_SIZE_MUST_BE_BETWEEN_ONE_AND + MAX_PAGE_SIZE
             );
         }
 
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by(Sort.Direction.ASC, "accountId")
-        );
+        AdminAccountSearchCriteria criteria = new AdminAccountSearchCriteria(search, status, accountType);
+        Page<AdminAccountResponse> result = accountRepository.findAccountsForAdminView(criteria, pageable);
 
-        Page<AdminAccountResponse> result = accountRepository.findAllForAdmin(pageable);
         return new PageResponse<>(
                 result.getContent(),
                 result.getNumber(),

@@ -4,9 +4,14 @@ import com.payment.ingestor.dto.account.AccountResponse;
 import com.payment.ingestor.dto.account.AdminAccountResponse;
 import com.payment.ingestor.dto.account.PageResponse;
 import com.payment.ingestor.dto.account.UpdateAccountRequest;
+import com.payment.ingestor.model.AccountStatus;
+import com.payment.ingestor.model.AccountType;
 import com.payment.ingestor.service.AdminAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +27,32 @@ public class AdminAccountController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageResponse<AdminAccountResponse>> getAccountsForAdminView(
 
-            @RequestParam(defaultValue = "0")
-            int page,
+            @RequestParam(required = false)
+            String search,
 
-            @RequestParam(defaultValue = "20")
-            int size
+            @RequestParam(required = false)
+            AccountStatus status,
+
+            @RequestParam(required = false)
+            AccountType accountType,
+
+            @PageableDefault(
+                    page = 0,
+                    size = 20,
+                    sort = "openedDate",
+                    direction = Sort.Direction.DESC
+            )
+            Pageable pageable
     ) {
-        return ResponseEntity.ok(adminAccountService.getAccountsForAdminView(page, size)
+
+        PageResponse<AdminAccountResponse> response = adminAccountService.getAccountsForAdminView(
+                search,
+                status,
+                accountType,
+                pageable
         );
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{accountId}")

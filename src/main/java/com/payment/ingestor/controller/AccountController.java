@@ -4,10 +4,14 @@ import com.payment.ingestor.dto.account.AccountResponse;
 import com.payment.ingestor.dto.account.CreateAccountRequest;
 import com.payment.ingestor.dto.account.PageResponse;
 import com.payment.ingestor.dto.account.RecipientAccountResponse;
+import com.payment.ingestor.model.AccountType;
 import com.payment.ingestor.security.AppUserDetails;
 import com.payment.ingestor.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -79,20 +83,35 @@ public class AccountController {
     @GetMapping("/recipients")
     public ResponseEntity<PageResponse<RecipientAccountResponse>> getRecipientAccounts(
 
-            @RequestParam(defaultValue = "0")
-            int page,
+            @RequestParam(required = false)
+            String search,
 
-            @RequestParam(defaultValue = "20")
-            int size,
+            @RequestParam(required = false)
+            AccountType accountType,
+
+            @RequestParam(required = false)
+            String currency,
+
+            @PageableDefault(
+                    page = 0,
+                    size = 20,
+                    sort = "userName",
+                    direction = Sort.Direction.ASC
+            )
+            Pageable pageable,
 
             @AuthenticationPrincipal
             AppUserDetails userDetails
     ) {
+
         PageResponse<RecipientAccountResponse> response = accountService.getRecipientAccounts(
-                page,
-                size,
-                userDetails
+                search,
+                accountType,
+                currency,
+                pageable,
+                userDetails.getUserId()
         );
+
         return ResponseEntity.ok(response);
     }
 

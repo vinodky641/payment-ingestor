@@ -1,9 +1,7 @@
 package com.payment.ingestor.service;
 
-import com.payment.ingestor.dto.account.AccountResponse;
-import com.payment.ingestor.dto.account.CreateAccountRequest;
-import com.payment.ingestor.dto.account.PageResponse;
-import com.payment.ingestor.dto.account.RecipientAccountResponse;
+import com.payment.ingestor.constant.PaymentIngestorConstants;
+import com.payment.ingestor.dto.account.*;
 import com.payment.ingestor.entity.Account;
 import com.payment.ingestor.entity.User;
 import com.payment.ingestor.exception.AccountNotFoundException;
@@ -11,12 +9,12 @@ import com.payment.ingestor.exception.AppIllegalArgumentException;
 import com.payment.ingestor.exception.DuplicateAccountException;
 import com.payment.ingestor.exception.UnauthorizedUserException;
 import com.payment.ingestor.model.AccountStatus;
+import com.payment.ingestor.model.AccountType;
 import com.payment.ingestor.repository.AccountRepository;
 import com.payment.ingestor.repository.UserRepository;
 import com.payment.ingestor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +90,7 @@ public class AccountService {
 
         if (status == null || status.isBlank()) {
             throw new AppIllegalArgumentException(
-                    STATUS_FIELD,
+                    PaymentIngestorConstants.ACCOUNT_STATUS_FIELD,
                     STATUS_CAN_NOT_BE_NULL_OR_BLANK
             );
         }
@@ -137,30 +135,35 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public PageResponse<RecipientAccountResponse> getRecipientAccounts(
-            int page,
-            int size,
-            AppUserDetails userDetails
+            String search,
+            AccountType accountType,
+            String currency,
+            Pageable pageable,
+            UUID currentUserId
     ) {
-        if (page < 0) {
+        if (pageable.getPageNumber() < 0) {
             throw new AppIllegalArgumentException(
                     PAGE_FIELD,
                     PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO
             );
         }
 
-        if (size < 1 || size > MAX_PAGE_SIZE) {
+        if (pageable.getPageSize() < 1 || pageable.getPageSize() > MAX_PAGE_SIZE) {
             throw new AppIllegalArgumentException(
                     PAGE_SIZE_FIELD,
                     PAGE_SIZE_MUST_BE_BETWEEN_ONE_AND + MAX_PAGE_SIZE
             );
         }
 
-        // Get the authenticated user's ID from JWT
-        UUID currentUserId = userDetails.getUserId();
-        Pageable pageable = PageRequest.of(page, size);
+        RecipientAccountSearchCriteria criteria = new RecipientAccountSearchCriteria(
+                search,
+                accountType,
+                currency,
+                currentUserId
+        );
+
         Page<RecipientAccountResponse> result = accountRepository.findRecipientAccounts(
-                currentUserId,
-                AccountStatus.ACTIVE,
+                criteria,
                 pageable
         );
 
