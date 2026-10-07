@@ -8,7 +8,7 @@ import com.payment.ingestor.entity.PaymentOutbox;
 import com.payment.ingestor.entity.User;
 import com.payment.ingestor.event.PaymentEvent;
 import com.payment.ingestor.exception.*;
-import com.payment.ingestor.model.AccountStatus;
+import com.payment.ingestor.enums.AccountStatus;
 import com.payment.ingestor.repository.AccountRepository;
 import com.payment.ingestor.repository.PaymentOutboxRepository;
 import com.payment.ingestor.repository.PaymentRepository;

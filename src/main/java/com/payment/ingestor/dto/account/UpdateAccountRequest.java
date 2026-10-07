@@ -1,7 +1,7 @@
 package com.payment.ingestor.dto.account;
 
-import com.payment.ingestor.model.AccountStatus;
-import com.payment.ingestor.model.AccountType;
+import com.payment.ingestor.enums.AccountStatus;
+import com.payment.ingestor.enums.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

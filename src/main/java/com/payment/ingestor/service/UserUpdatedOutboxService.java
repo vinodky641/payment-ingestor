@@ -3,7 +3,7 @@ package com.payment.ingestor.service;
 import com.payment.ingestor.entity.User;
 import com.payment.ingestor.entity.UserUpdatedOutbox;
 import com.payment.ingestor.event.UserUpdatedEvent;
-import com.payment.ingestor.model.OutboxStatus;
+import com.payment.ingestor.enums.OutboxStatus;
 import com.payment.ingestor.repository.UserUpdatedOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +38,7 @@ public class UserUpdatedOutboxService {
                     user.isEmailVerified(),
                     user.getCreatedAt(),
                     user.getUpdatedAt(),
+                    user.getRole(),
                     user.getSourceVersion()
             );
 

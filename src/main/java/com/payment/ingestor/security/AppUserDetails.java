@@ -1,7 +1,7 @@
 package com.payment.ingestor.security;
 
 import com.payment.ingestor.entity.User;
-import com.payment.ingestor.model.UserStatus;
+import com.payment.ingestor.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

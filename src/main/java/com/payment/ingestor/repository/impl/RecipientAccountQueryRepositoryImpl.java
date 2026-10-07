@@ -5,7 +5,7 @@ import com.payment.ingestor.dto.account.RecipientAccountSearchCriteria;
 import com.payment.ingestor.entity.Account;
 import com.payment.ingestor.entity.User;
 import com.payment.ingestor.exception.AppIllegalArgumentException;
-import com.payment.ingestor.model.AccountStatus;
+import com.payment.ingestor.enums.AccountStatus;
 import com.payment.ingestor.repository.RecipientAccountQueryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

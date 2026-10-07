@@ -1,8 +1,8 @@
 package com.payment.ingestor.dto.account;
 
 import com.payment.ingestor.entity.Account;
-import com.payment.ingestor.model.AccountStatus;
-import com.payment.ingestor.model.AccountType;
+import com.payment.ingestor.enums.AccountStatus;
+import com.payment.ingestor.enums.AccountType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

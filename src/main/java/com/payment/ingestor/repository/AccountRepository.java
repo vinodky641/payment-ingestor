@@ -1,8 +1,8 @@
 package com.payment.ingestor.repository;
 
 import com.payment.ingestor.entity.Account;
-import com.payment.ingestor.model.AccountStatus;
-import com.payment.ingestor.model.AccountType;
+import com.payment.ingestor.enums.AccountStatus;
+import com.payment.ingestor.enums.AccountType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

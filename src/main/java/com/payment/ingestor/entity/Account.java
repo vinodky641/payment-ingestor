@@ -1,7 +1,7 @@
 package com.payment.ingestor.entity;
 
-import com.payment.ingestor.model.AccountStatus;
-import com.payment.ingestor.model.AccountType;
+import com.payment.ingestor.enums.AccountStatus;
+import com.payment.ingestor.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

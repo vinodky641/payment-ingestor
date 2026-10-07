@@ -1,6 +1,6 @@
 package com.payment.ingestor.entity;
 
-import com.payment.ingestor.model.OutboxStatus;
+import com.payment.ingestor.enums.OutboxStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 

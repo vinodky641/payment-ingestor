@@ -1,7 +1,7 @@
 package com.payment.ingestor.entity;
 
-import com.payment.ingestor.model.Role;
-import com.payment.ingestor.model.UserStatus;
+import com.payment.ingestor.enums.Role;
+import com.payment.ingestor.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;

@@ -1,6 +1,6 @@
 package com.payment.ingestor.dto.account;
 
-import com.payment.ingestor.model.AccountType;
+import com.payment.ingestor.enums.AccountType;
 
 import java.util.UUID;
 

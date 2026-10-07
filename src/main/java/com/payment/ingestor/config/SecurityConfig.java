@@ -4,6 +4,7 @@ import com.payment.ingestor.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import static com.payment.ingestor.constant.PaymentIngestorConstants.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -31,6 +33,11 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                SWAGGER_UI_PATH,
+                                SWAGGER_UI_RESOURCES_PATH,
+                                API_DOCS_PATH
+                        ).permitAll()
                         .requestMatchers(
                                 API_ENDPOINT_AUTH_SIGNUP,
                                 API_ENDPOINT_AUTH_LOGIN,

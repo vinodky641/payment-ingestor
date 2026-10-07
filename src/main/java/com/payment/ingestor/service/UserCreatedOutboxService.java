@@ -3,7 +3,7 @@ package com.payment.ingestor.service;
 import com.payment.ingestor.entity.User;
 import com.payment.ingestor.entity.UserCreatedOutbox;
 import com.payment.ingestor.event.UserCreatedEvent;
-import com.payment.ingestor.model.OutboxStatus;
+import com.payment.ingestor.enums.OutboxStatus;
 import com.payment.ingestor.repository.UserCreatedOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

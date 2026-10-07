@@ -1,7 +1,7 @@
 package com.payment.ingestor.event;
 
-import com.payment.ingestor.model.Role;
-import com.payment.ingestor.model.UserStatus;
+import com.payment.ingestor.enums.Role;
+import com.payment.ingestor.enums.UserStatus;
 
 import java.time.Instant;
 import java.util.UUID;

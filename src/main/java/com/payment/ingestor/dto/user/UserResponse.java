@@ -1,7 +1,7 @@
 package com.payment.ingestor.dto.user;
 
 import com.payment.ingestor.entity.User;
-import com.payment.ingestor.model.UserStatus;
+import com.payment.ingestor.enums.UserStatus;
 
 import java.time.Instant;
 import java.util.UUID;
