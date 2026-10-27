@@ -44,7 +44,11 @@ public class PaymentController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "202",
-                    description = "Payment accepted for processing"
+                    description = "Payment accepted for processing",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AcceptedResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -91,7 +95,8 @@ public class PaymentController {
             AppUserDetails userDetails,
 
             @Valid @RequestBody
-            PaymentRequest paymentRequest) {
+            PaymentRequest paymentRequest
+    ) {
 
         AcceptedResponse response = paymentOutboxService.createPayment(
                 idempotencyKey,

@@ -39,7 +39,11 @@ public class AuthController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
-                    description = "User registered successfully"
+                    description = "User registered successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SignupResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -72,7 +76,11 @@ public class AuthController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Login successful"
+                    description = "Login successful",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LoginResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",

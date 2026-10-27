@@ -1,12 +1,11 @@
 package com.payment.ingestor.controller;
 
 import com.payment.ingestor.dto.account.AccountResponse;
-import com.payment.ingestor.dto.account.AdminAccountResponse;
-import com.payment.ingestor.dto.account.PageResponse;
+import com.payment.ingestor.dto.account.AdminAccountPageResponse;
 import com.payment.ingestor.dto.account.UpdateAccountRequest;
-import com.payment.ingestor.exception.ApiErrorResponse;
 import com.payment.ingestor.enums.AccountStatus;
 import com.payment.ingestor.enums.AccountType;
+import com.payment.ingestor.exception.ApiErrorResponse;
 import com.payment.ingestor.service.AdminAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,7 +45,11 @@ public class AdminAccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Accounts retrieved successfully"
+                    description = "Accounts retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AdminAccountPageResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -76,7 +79,7 @@ public class AdminAccountController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PageResponse<AdminAccountResponse>> getAccountsForAdminView(
+    public ResponseEntity<AdminAccountPageResponse> getAccountsForAdminView(
 
             @RequestParam(required = false)
             String search,
@@ -96,7 +99,7 @@ public class AdminAccountController {
             Pageable pageable
     ) {
 
-        PageResponse<AdminAccountResponse> response = adminAccountService.getAccountsForAdminView(
+        AdminAccountPageResponse response = adminAccountService.getAccountsForAdminView(
                 search,
                 status,
                 accountType,
@@ -118,7 +121,11 @@ public class AdminAccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Account updated successfully"
+                    description = "Account updated successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AccountResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",

@@ -40,7 +40,11 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "User profile updated successfully"
+                    description = "User profile updated successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",

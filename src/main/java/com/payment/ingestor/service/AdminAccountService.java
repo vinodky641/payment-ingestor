@@ -2,10 +2,10 @@ package com.payment.ingestor.service;
 
 import com.payment.ingestor.dto.account.*;
 import com.payment.ingestor.entity.Account;
-import com.payment.ingestor.exception.AccountNotFoundException;
-import com.payment.ingestor.exception.AppIllegalArgumentException;
 import com.payment.ingestor.enums.AccountStatus;
 import com.payment.ingestor.enums.AccountType;
+import com.payment.ingestor.exception.AccountNotFoundException;
+import com.payment.ingestor.exception.AppIllegalArgumentException;
 import com.payment.ingestor.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public class AdminAccountService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
-    public PageResponse<AdminAccountResponse> getAccountsForAdminView(
+    public AdminAccountPageResponse getAccountsForAdminView(
             String search,
             AccountStatus status,
             AccountType accountType,
@@ -48,7 +48,7 @@ public class AdminAccountService {
         AdminAccountSearchCriteria criteria = new AdminAccountSearchCriteria(search, status, accountType);
         Page<AdminAccountResponse> result = accountRepository.findAccountsForAdminView(criteria, pageable);
 
-        return new PageResponse<>(
+        return new AdminAccountPageResponse(
                 result.getContent(),
                 result.getNumber(),
                 result.getSize(),

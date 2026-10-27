@@ -4,12 +4,12 @@ import com.payment.ingestor.constant.PaymentIngestorConstants;
 import com.payment.ingestor.dto.account.*;
 import com.payment.ingestor.entity.Account;
 import com.payment.ingestor.entity.User;
+import com.payment.ingestor.enums.AccountStatus;
+import com.payment.ingestor.enums.AccountType;
 import com.payment.ingestor.exception.AccountNotFoundException;
 import com.payment.ingestor.exception.AppIllegalArgumentException;
 import com.payment.ingestor.exception.DuplicateAccountException;
 import com.payment.ingestor.exception.UnauthorizedUserException;
-import com.payment.ingestor.enums.AccountStatus;
-import com.payment.ingestor.enums.AccountType;
 import com.payment.ingestor.repository.AccountRepository;
 import com.payment.ingestor.repository.UserRepository;
 import com.payment.ingestor.security.AppUserDetails;
@@ -134,7 +134,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<RecipientAccountResponse> getRecipientAccounts(
+    public RecipientAccountPageResponse getRecipientAccounts(
             String search,
             AccountType accountType,
             String currency,
@@ -167,7 +167,7 @@ public class AccountService {
                 pageable
         );
 
-        return new PageResponse<>(
+        return new RecipientAccountPageResponse(
                 result.getContent(),
                 result.getNumber(),
                 result.getSize(),

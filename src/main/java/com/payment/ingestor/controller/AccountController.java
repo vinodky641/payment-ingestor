@@ -2,13 +2,13 @@ package com.payment.ingestor.controller;
 
 import com.payment.ingestor.dto.account.AccountResponse;
 import com.payment.ingestor.dto.account.CreateAccountRequest;
-import com.payment.ingestor.dto.account.PageResponse;
-import com.payment.ingestor.dto.account.RecipientAccountResponse;
-import com.payment.ingestor.exception.ApiErrorResponse;
+import com.payment.ingestor.dto.account.RecipientAccountPageResponse;
 import com.payment.ingestor.enums.AccountType;
+import com.payment.ingestor.exception.ApiErrorResponse;
 import com.payment.ingestor.security.AppUserDetails;
 import com.payment.ingestor.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -50,7 +50,11 @@ public class AccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
-                    description = "Account created successfully"
+                    description = "Account created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AccountResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -105,7 +109,13 @@ public class AccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Accounts retrieved successfully"
+                    description = "Accounts retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = AccountResponse.class)
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "401",
@@ -140,7 +150,13 @@ public class AccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Accounts retrieved successfully"
+                    description = "Accounts retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = AccountResponse.class)
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -185,7 +201,11 @@ public class AccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Account retrieved successfully"
+                    description = "Account retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AccountResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "401",
@@ -231,7 +251,11 @@ public class AccountController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Recipient accounts retrieved successfully"
+                    description = "Recipient accounts retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RecipientAccountPageResponse.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -253,7 +277,7 @@ public class AccountController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/recipients")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PageResponse<RecipientAccountResponse>> getRecipientAccounts(
+    public ResponseEntity<RecipientAccountPageResponse> getRecipientAccounts(
 
             @RequestParam(required = false)
             String search,
@@ -276,7 +300,7 @@ public class AccountController {
             AppUserDetails userDetails
     ) {
 
-        PageResponse<RecipientAccountResponse> response = accountService.getRecipientAccounts(
+        RecipientAccountPageResponse response = accountService.getRecipientAccounts(
                 search,
                 accountType,
                 currency,
