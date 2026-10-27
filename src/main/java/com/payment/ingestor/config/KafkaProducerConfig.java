@@ -1,7 +1,7 @@
 package com.payment.ingestor.config;
 
 import com.payment.ingestor.event.*;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,8 +17,8 @@ import org.springframework.kafka.support.serializer.JacksonJsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-@AllArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 @EnableConfigurationProperties(KafkaProducerProperties.class)
 public class KafkaProducerConfig {
 

@@ -18,7 +18,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Payment Ingestor API")
                         .version("1.0.0")
-                        .description("REST API for payment ingestion, user management, account management, and payment submission.")
+                        .description("REST API for Payment Ingestion, user management, account management, and payment submission.")
                 )
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(
