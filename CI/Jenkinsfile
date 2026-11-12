@@ -1,0 +1,144 @@
+def publishGitHubStatus(String status, String description) {
+    withCredentials([
+        string(
+            credentialsId: 'payment-ingestor-github-status-token',
+            variable: 'GITHUB_TOKEN'
+        )
+    ]) {
+        withEnv([
+            "STATUS_STATE=${status}",
+            "STATUS_DESCRIPTION=${description}"
+        ]) {
+            sh '''
+                set -eu
+
+                REPO_PATH="${GIT_URL#https://github.com/}"
+                REPO_PATH="${REPO_PATH%.git}"
+
+                if [ -z "$REPO_PATH" ] || [ "$REPO_PATH" = "$GIT_URL" ]; then
+                    echo "Unable to determine GitHub repository from GIT_URL"
+                    exit 1
+                fi
+
+                curl --fail --silent --show-error \
+                    -X POST \
+                    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github+json" \
+                    -H "X-GitHub-Api-Version: 2022-11-28" \
+                    "https://api.github.com/repos/${REPO_PATH}/statuses/${GIT_COMMIT}" \
+                    -d "{\"state\":\"${STATUS_STATE}\",\"context\":\"ci/jenkins/payment-ingestor\",\"description\":\"${STATUS_DESCRIPTION}\",\"target_url\":\"${BUILD_URL}\"}"
+            '''
+        }
+    }
+}
+
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+
+                script {
+                    echo "Building branch: ${env.BRANCH_NAME ?: 'dev'}"
+                    echo "Git commit: ${env.GIT_COMMIT}"
+                }
+            }
+        }
+
+        stage('GitHub Pending Status') {
+            steps {
+                script {
+                    publishGitHubStatus('pending', 'Payment-Ingestor CI build started')
+                }
+            }
+        }
+
+        stage('Verify Java and Maven') {
+            steps {
+                sh '''
+                    echo "Checking Java version..."
+                    java -version
+
+                    echo "Checking Maven wrapper..."
+                    chmod +x mvnw
+                    ./mvnw -version
+                '''
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh '''
+                    ./mvnw -B clean verify
+                '''
+            }
+            post {
+                always {
+                    junit(
+                        testResults: 'target/surefire-reports/*.xml,target/failsafe-reports/*.xml',
+                        allowEmptyResults: true
+                    )
+                }
+            }
+        }
+
+        stage('Prepare Docker Image') {
+            steps {
+                script {
+                    env.IMAGE_TAG = "${env.GIT_COMMIT.take(12)}-build-${env.BUILD_NUMBER}"
+                    env.IMAGE_NAME = "payment-ingestor:${env.IMAGE_TAG}"
+
+                    echo "Docker image: ${env.IMAGE_NAME}"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    docker build -t "$IMAGE_NAME" .
+                '''
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts(
+                    artifacts: 'target/*.jar',
+                    fingerprint: true
+                )
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                publishGitHubStatus('success', 'Payment-Ingestor CI build passed')
+            }
+            echo 'Payment-Ingestor CI completed successfully.'
+        }
+
+        failure {
+            script {
+                publishGitHubStatus('failure', 'Payment-Ingestor CI build failed')
+            }
+            echo 'Payment-Ingestor CI failed.'
+        }
+
+        aborted {
+            script {
+                publishGitHubStatus('error', 'Payment-Ingestor CI build aborted')
+            }
+        }
+    }
+}
