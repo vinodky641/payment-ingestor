@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.BEARER_AUTH;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -81,7 +83,7 @@ public class AccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AccountResponse> createAccount(
@@ -126,7 +128,7 @@ public class AccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AccountResponse>> getAllAccounts(
@@ -175,7 +177,7 @@ public class AccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AccountResponse>> getAllAccountsByStatus(
@@ -224,7 +226,7 @@ public class AccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @GetMapping("/{accountId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AccountResponse> getAccount(
@@ -274,7 +276,7 @@ public class AccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @GetMapping("/recipients")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RecipientAccountPageResponse> getRecipientAccounts(

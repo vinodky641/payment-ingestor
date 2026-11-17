@@ -23,7 +23,7 @@ public class PaymentOutboxRecoveryService {
     private final PaymentOutboxProperties properties;
     private final MeterRegistry meterRegistry;
 
-    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_STALE_PAYMENT_RECOVERY)
+    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_STALE_PAYMENTS_RECOVERY)
     @Transactional
     public void recoverStaleEvents() {
 

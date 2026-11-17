@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_BOOTSTRAP_SERVERS;
 import static com.payment.ingestor.constant.PaymentIngestorConstants.TRUSTED_PACKAGE_OF_PAYMENT_EVENT;
 
 @Configuration
@@ -39,7 +40,7 @@ public class AccountBalanceChangedKafkaConsumerConfig {
     private final AccountBalanceChangedRetryTopicProperties retryProperties;
     private final RetryTopicProducerProperties producerProperties;
 
-    @Value("${spring.kafka.bootstrap-servers}")
+    @Value(KAFKA_BOOTSTRAP_SERVERS)
     private String bootstrapServers;
 
     @Bean

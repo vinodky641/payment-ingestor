@@ -3,35 +3,182 @@ spring:
     name: payment-ingestor
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/payments}
-    username: ${DB_USERNAME:payments}
-    password: ${DB_PASSWORD:payments}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
-    hibernate.ddl-auto: validate
+    hibernate:
+      ddl-auto: validate
+
     open-in-view: false
 
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP}
+
+    topics:
+      users-created:
+        name: users.created
+        partitions: 3
+        replication-factor: 1
+        retention-ms: 604800000
+
+      users-updated:
+        name: users.updated
+        partitions: 3
+        replication-factor: 1
+        retention-ms: 604800000
+
+      accounts-created:
+        name: accounts.created
+        partitions: 3
+        replication-factor: 1
+        retention-ms: 604800000
+
+      accounts-updated:
+        name: accounts.updated
+        partitions: 3
+        replication-factor: 1
+        retention-ms: 604800000
+
+      payments-submitted:
+          name: payments.submitted
+          partitions: 12
+          replication-factor: 1
+          retention-ms: 604800000
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  jackson:
+    datatype:
+      datetime:
+        write-dates-as-timestamps: false
+
+app:
+  kafka:
+    consumer:
+      balance-group-id: payment-processor-balance
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 100
+
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
-      retries: 10
-      properties:
-        enable.idempotence: true
-        compression.type: lz4
+      enable-idempotence: true
+      retries: 2147483647
+      max-in-flight-requests-per-connection: 5
+      compression-type: lz4
+      linger-ms: 5
+      batch-size: 65536
+      request-timeout-ms: 30000
+      delivery-timeout-ms: 120000
+      add-type-info-headers: false
 
-  data.redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
+    retry-topics:
+      producer:
+        acks: all
+        enable-idempotence: true
+        max-in-flight-requests-per-connection: 5
+        delivery-timeout-ms: 120000
+        request-timeout-ms: 30000
+        linger-ms: 5
+        compression-type: lz4
 
-  jackson.serialization.write-dates-as-timestamps: false
+      accounts-balance-changed:
+        topic-name: accounts.balance-changed
+        initial-delay-ms: 1000
+        multiplier: 2.0
+        max-delay-ms: 10000
+        max-attempts: 4
+        dlt-suffix: .DLT
+        num-partitions: 12
+        replication-factor: 1
 
-server.port: ${SERVER_PORT:8081}
-management.endpoints.web.exposure.include: health,metrics,prometheus
-management.endpoint.health.show-details: always
-management.health.redis.enabled: false
-outbox.poll-ms: 250
-management.health.db.enabled: false
-management.health.kafka.enabled: false
+  outbox:
+    users-created:
+      batch-size: 50
+      max-in-flight: 200
+      fixed-delay-ms: 500
+      recovery:
+        stale-after-minutes: 5
+        fixed-delay-ms: 60000
+
+    users-updated:
+      batch-size: 50
+      max-in-flight: 200
+      fixed-delay-ms: 500
+      recovery:
+        stale-after-minutes: 5
+        fixed-delay-ms: 60000
+
+    accounts-created:
+      batch-size: 50
+      max-in-flight: 200
+      fixed-delay-ms: 500
+      recovery:
+        stale-after-minutes: 5
+        fixed-delay-ms: 60000
+
+    accounts-updated:
+      batch-size: 50
+      max-in-flight: 200
+      fixed-delay-ms: 500
+      recovery:
+        stale-after-minutes: 5
+        fixed-delay-ms: 60000
+
+    payments:
+      batch-size: 100
+      max-in-flight: 1000
+      fixed-delay-ms: 200
+      recovery:
+        stale-after-minutes: 5
+        fixed-delay-ms: 60000
+
+  security:
+    jwt:
+      private-key: ${JWT_PRIVATE_KEY}
+      public-key: ${JWT_PUBLIC_KEY}
+      issuer: payment-ingestor
+      audiences:
+        - payment-ingestor
+        - payment-processor
+      expiration-ms: 3600000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+  packages-to-scan:
+    - com.payment.ingestor.controller
+
+server:
+  port: ${SERVER_PORT:8081}
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+
+  health:
+    redis:
+      enabled: true
+
+    db:
+      enabled: true
+
+    kafka:
+      enabled: true

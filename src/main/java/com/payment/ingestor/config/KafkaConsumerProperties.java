@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_CONSUMER;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "app.kafka.consumer")
+@ConfigurationProperties(prefix = KAFKA_CONSUMER)
 public class KafkaConsumerProperties {
 
     private String balanceGroupId;

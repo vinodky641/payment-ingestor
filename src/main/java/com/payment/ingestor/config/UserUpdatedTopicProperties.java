@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_TOPIC_FOR_USERS_UPDATED;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "spring.kafka.topics.users-updated")
+@ConfigurationProperties(prefix = KAFKA_TOPIC_FOR_USERS_UPDATED)
 public class UserUpdatedTopicProperties {
 
     private String name;

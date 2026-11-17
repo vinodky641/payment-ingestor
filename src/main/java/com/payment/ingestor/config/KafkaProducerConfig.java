@@ -17,6 +17,8 @@ import org.springframework.kafka.support.serializer.JacksonJsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_BOOTSTRAP_SERVERS;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(KafkaProducerProperties.class)
@@ -24,7 +26,7 @@ public class KafkaProducerConfig {
 
     private final KafkaProducerProperties producerProperties;
 
-    @Value("${spring.kafka.bootstrap-servers}")
+    @Value(KAFKA_BOOTSTRAP_SERVERS)
     private String bootstrapServers;
 
     private Map<String, Object> producerProperties() {

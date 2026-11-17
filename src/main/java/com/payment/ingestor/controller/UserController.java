@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.BEARER_AUTH;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -71,7 +73,7 @@ public class UserController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserResponse> updateMyProfile(

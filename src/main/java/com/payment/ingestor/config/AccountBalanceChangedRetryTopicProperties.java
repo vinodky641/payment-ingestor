@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_RETRY_TOPIC_FOR_ACCOUNTS_BALANCE_CHANGED;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "app.kafka.retry-topics.accounts-balance-changed")
+@ConfigurationProperties(prefix = KAFKA_RETRY_TOPIC_FOR_ACCOUNTS_BALANCE_CHANGED)
 public class AccountBalanceChangedRetryTopicProperties {
 
     private String topicName = "accounts.balance-changed";

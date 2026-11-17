@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.OUTBOX_FOR_USERS_CREATED;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "app.outbox.user-created")
+@ConfigurationProperties(prefix = OUTBOX_FOR_USERS_CREATED)
 public class UserCreatedOutboxProperties {
 
     private int batchSize = 50;

@@ -10,6 +10,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.*;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -18,9 +20,9 @@ public class AccountBalanceChangedEventConsumer {
     private final AccountBalanceChangedEventHandler handler;
 
     @KafkaListener(
-            topics = "${spring.kafka.topics.accounts.balance-changed}",
-            groupId = "${app.kafka.consumer.balance-group-id}",
-            containerFactory = "accountBalanceChangedKafkaListenerContainerFactory"
+            topics = KAFKA_TOPIC_NAME_FOR_ACCOUNTS_BALANCE_CHANGED,
+            groupId = KAFKA_CONSUMER_BALANCE_GROUP_ID,
+            containerFactory = ACCOUNTS_BALANCE_CHANGED_KAFKA_LISTENER_CONTAINER_FACTORY
     )
     public void consume(AccountBalanceChangedEvent event) {
         log.debug("Received AccountBalanceChangedEvent. eventId={}, accountId={}, paymentId={}, balanceVersion={}",

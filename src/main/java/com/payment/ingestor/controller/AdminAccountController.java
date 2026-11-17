@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.BEARER_AUTH;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin/accounts")
@@ -76,7 +78,7 @@ public class AdminAccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdminAccountPageResponse> getAccountsForAdminView(
@@ -168,7 +170,7 @@ public class AdminAccountController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @PutMapping("/{accountId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AccountResponse> updateAccountByAdmin(

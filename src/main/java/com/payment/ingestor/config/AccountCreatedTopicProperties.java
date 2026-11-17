@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_TOPIC_FOR_ACCOUNTS_CREATED;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "spring.kafka.topics.accounts-created")
+@ConfigurationProperties(prefix = KAFKA_TOPIC_FOR_ACCOUNTS_CREATED)
 public class AccountCreatedTopicProperties {
 
     private String name;

@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_RETRY_TOPICS_PRODUCER;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "app.kafka.retry-topics.producer")
+@ConfigurationProperties(prefix = KAFKA_RETRY_TOPICS_PRODUCER)
 public class RetryTopicProducerProperties {
 
     private String acks = "all";

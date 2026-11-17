@@ -8,6 +8,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.*;
+
 @Configuration
 public class OpenApiConfig {
 
@@ -20,16 +22,16 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .description("REST API for Payment Ingestion, user management, account management, and payment submission.")
                 )
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .addSecurityItem(new SecurityRequirement().addList(BEARER_AUTH))
                 .components(
                         new Components()
                                 .addSecuritySchemes(
-                                        "bearerAuth",
+                                        BEARER_AUTH,
                                         new SecurityScheme()
-                                                .name("Authorization")
+                                                .name(AUTHORIZATION_HEADER)
                                                 .type(SecurityScheme.Type.HTTP)
-                                                .scheme("bearer")
-                                                .bearerFormat("JWT")
+                                                .scheme(SCHEME_BEARER)
+                                                .bearerFormat(BEARER_FORMAT_JWT)
                                 )
                 );
     }

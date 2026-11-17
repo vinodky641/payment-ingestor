@@ -61,7 +61,7 @@ public class UserCreatedOutboxPublisher {
 
     }
 
-    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_PENDING_USER_CREATED_PUBLISH)
+    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_PENDING_USERS_CREATED_PUBLISH)
     public void publishPendingEvents() {
 
         int currentInFlight = inFlight.get();

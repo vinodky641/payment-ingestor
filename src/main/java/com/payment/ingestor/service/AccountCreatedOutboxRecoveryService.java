@@ -23,7 +23,7 @@ public class AccountCreatedOutboxRecoveryService {
     private final AccountCreatedOutboxProperties properties;
     private final MeterRegistry meterRegistry;
 
-    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_STALE_ACCOUNT_CREATED_RECOVERY)
+    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_STALE_ACCOUNTS_CREATED_RECOVERY)
     @Transactional
     public void recoverStaleEvents() {
 

@@ -20,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.BEARER_AUTH;
+
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
@@ -83,7 +85,7 @@ public class PaymentController {
                     )
             )
     })
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = BEARER_AUTH)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AcceptedResponse> createPayment(

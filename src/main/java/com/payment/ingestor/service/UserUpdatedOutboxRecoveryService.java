@@ -23,7 +23,7 @@ public class UserUpdatedOutboxRecoveryService {
     private final UserUpdatedOutboxProperties properties;
     private final MeterRegistry meterRegistry;
 
-    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_STALE_USER_UPDATED_RECOVERY)
+    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_STALE_USERS_UPDATED_RECOVERY)
     @Transactional
     public void recoverStaleEvents() {
 

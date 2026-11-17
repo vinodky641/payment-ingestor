@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.KAFKA_PRODUCER;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "app.kafka.producer")
+@ConfigurationProperties(prefix = KAFKA_PRODUCER)
 public class KafkaProducerProperties {
 
     private String acks;

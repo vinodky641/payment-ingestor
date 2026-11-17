@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.payment.ingestor.constant.PaymentIngestorConstants.OUTBOX_FOR_PAYMENTS;
+
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "app.outbox.payment")
+@ConfigurationProperties(prefix = OUTBOX_FOR_PAYMENTS)
 public class PaymentOutboxProperties {
 
     private int batchSize = 100;
@@ -20,5 +22,5 @@ public class PaymentOutboxProperties {
         private long staleAfterMinutes = 5;
         private long fixedDelayMs = 60_000;
     }
-    
+
 }

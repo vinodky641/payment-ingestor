@@ -63,7 +63,7 @@ public class PaymentOutboxPublisher {
     }
 
 
-    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_PENDING_PAYMENT_PUBLISH)
+    @Scheduled(fixedDelayString = TIME_INTERVAL_FOR_RUNNING_PENDING_PAYMENTS_PUBLISH)
     public void publishPendingEvents() {
 
         int currentInFlight = inFlight.get();
