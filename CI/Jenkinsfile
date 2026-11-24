@@ -39,7 +39,7 @@ def publishGitHubStatus(String status, String description) {
                     exit 1
                 fi
 
-                curl --fail --silent --show-error \
+                curl --silent --show-error --include \
                     -X POST \
                     -H "Authorization: Bearer $GITHUB_TOKEN" \
                     -H "Accept: application/vnd.github+json" \
